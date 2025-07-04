@@ -1,0 +1,34 @@
+#Code
+
+CREATE TABLE Patients (
+  patient_id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100),
+  birthdate DATE,
+  admission_date DATE
+);
+INSERT INTO Patients(name, birthdate, admission_date)
+VALUES ('Aditi','2000-05-10','2025-07-04');
+
+DROP FUNCTION IF EXISTS getAge;
+CREATE FUNCTION getAge(birthdate DATE)
+RETURNS INT DETERMINISTIC
+BEGIN
+  DECLARE age INT;
+  SET age = TIMESTAMPDIFF(YEAR, birthdate, CURDATE());
+  RETURN age;
+END;
+
+DROP PROCEDURE IF EXISTS AddPatient;
+CREATE PROCEDURE AddPatient(
+  IN p_name VARCHAR(100),
+  IN p_birthdate DATE,
+  IN p_admission_date DATE
+)
+BEGIN
+  INSERT INTO Patients(name,birthdate,admission_date)
+  VALUES(p_name,p_birthdate,p_admission_date);
+END;
+
+SELECT name, getAge(birthdate) AS age FROM Patients;
+CALL AddPatient('Meera','1990-09-18','2025-07-04');
+SELECT * FROM Patients;
